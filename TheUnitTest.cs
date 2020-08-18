@@ -54,15 +54,20 @@ namespace RefitObservableTestPlay
             new TestScheduler().With(
                 scheduler =>
                 {
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                     _logger.Information("Setup variable to write into");
                     Thing thing = null;
                     _logger.Information("Setup observable");
-                    var tenSeconds = Observable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(1), scheduler: RxApp.MainThreadScheduler)
+                    var tenSeconds = Observable.Timer(
+                            TimeSpan.Zero,
+                            TimeSpan.FromSeconds(1),
+                            scheduler: RxApp.MainThreadScheduler
+                        )
                         .Do(
                             intervalNumber => { _logger.Information("interval #{number}", intervalNumber); }
                         );
                     var thingsObservable =
-                        tenSeconds.Select(_ => someApiService.GetThing().Delay(TimeSpan.FromMilliseconds(1)));
+                        tenSeconds.Select(_ => someApiService.GetThing());
                     var switchedObservable = thingsObservable.Switch();
                     switchedObservable.Subscribe(
                         onNext: remoteThing =>
@@ -71,11 +76,32 @@ namespace RefitObservableTestPlay
                             thing = remoteThing;
                         }
                     );
-                    _logger.Information("Observable is setup");
-                    _logger.Information("Advancing Time");
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceBy(1);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceBy(1);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceBy(1);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                     scheduler.AdvanceByMs(2000);
-                    _logger.Information("Time is advanced");
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                     scheduler.AdvanceByMs(1);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
 
                     Assert.NotNull(thing);
                     Assert.Equal("R.J. MacReady", thing.Name);
