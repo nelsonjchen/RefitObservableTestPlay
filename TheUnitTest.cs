@@ -51,12 +51,15 @@ namespace RefitObservableTestPlay
 
             _logger.Information("Check complete");
 
+            var apiCallsToMake = 20;
+            var assignments = 0;
+            Thing thing = null;
+
             new TestScheduler().With(
                 scheduler =>
                 {
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    _logger.Information("Setup variable to write into");
-                    Thing thing = null;
+
                     _logger.Information("Setup observable");
                     var tenSeconds = Observable.Timer(
                             TimeSpan.Zero,
@@ -67,44 +70,28 @@ namespace RefitObservableTestPlay
                             intervalNumber => { _logger.Information("interval #{number}", intervalNumber); }
                         );
                     var thingsObservable =
-                        tenSeconds.Select(_ => someApiService.GetThing());
+                        tenSeconds.Select(
+                            _ => someApiService.GetThing()
+                        );
                     var switchedObservable = thingsObservable.Switch();
                     switchedObservable.Subscribe(
                         onNext: remoteThing =>
                         {
                             _logger.Debug("Assigning Thing");
+                            assignments += 1;
                             thing = remoteThing;
                         }
                     );
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(2000);
+
+                    for (int i = 0; i < apiCallsToMake; i += 1)
+                    {
+                        _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                        scheduler.AdvanceByMs(1000);
+                    }
 
                     Assert.NotNull(thing);
                     Assert.Equal("R.J. MacReady", thing.Name);
+                    Assert.Equal(40, assignments);
                 }
             );
         }
