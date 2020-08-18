@@ -77,15 +77,15 @@ namespace RefitObservableTestPlay
                         }
                     );
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceBy(1);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceBy(1);
-                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceBy(1);
+                    scheduler.AdvanceByMs(2000);
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                     scheduler.AdvanceByMs(2000);
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
-                    scheduler.AdvanceByMs(1);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
+                    _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
+                    scheduler.AdvanceByMs(2000);
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                     scheduler.AdvanceByMs(2000);
                     _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
