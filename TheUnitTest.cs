@@ -1,6 +1,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Threading;
 using Microsoft.Reactive.Testing;
 using ReactiveUI;
 using ReactiveUI.Testing;
@@ -87,11 +88,13 @@ namespace RefitObservableTestPlay
                     {
                         _logger.Debug("Scheduler Clock: {clock}", scheduler.Clock);
                         scheduler.AdvanceByMs(1000);
+                        // Make it deterministic. Give inner observables time to resolve.
+                        Thread.Sleep(1);
                     }
 
                     Assert.NotNull(thing);
                     Assert.Equal("R.J. MacReady", thing.Name);
-                    Assert.Equal(40, assignments);
+                    Assert.Equal(20, assignments);
                 }
             );
         }
